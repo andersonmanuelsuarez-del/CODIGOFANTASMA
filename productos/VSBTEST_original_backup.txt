@@ -1,0 +1,3 @@
+// ARCHIVO DE REFERENCIA — NO USAR EN PRODUCCIÓN
+// Este es el código original VSBTEST antes de la transformación a Anza.
+// Guardado como backup el 2026-06-03.

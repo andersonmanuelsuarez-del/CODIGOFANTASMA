@@ -1,0 +1,152 @@
+//@version=6
+indicator("CASADOR DE TENDENCIA 2.0", overlay=true)
+
+// === Medias en M1 ===
+ema200 = ta.ema(close, 200)
+wma9   = ta.wma(close, 9)
+vwap   = ta.vwap(close)
+
+// === Confirmación M15 (solo para la tabla) ===
+confirm_tf = input.timeframe("15", "TF de confirmación")
+ema200_tf  = request.security(syminfo.tickerid, confirm_tf, ta.ema(close, 200))
+vwap_tf    = request.security(syminfo.tickerid, confirm_tf, ta.vwap(close))
+
+// === Sesión NY (igual al original) ===
+in_session = not na(time(timeframe.period, "0830-1200"))
+
+// === Cruces globales ===
+cross_up   = ta.crossover(wma9, ema200)
+cross_down = ta.crossunder(wma9, ema200)
+
+// === Señales (SIN CAMBIOS) ===
+buy_signal  = in_session and cross_up   and close > vwap
+sell_signal = in_session and cross_down and close < vwap
+
+plotshape(buy_signal,  title="BUY",  text="COMPRAR",
+     location=location.belowbar, color=color.new(color.green,0),
+     style=shape.labelup, size=size.tiny)
+
+plotshape(sell_signal, title="SELL", text="VENDER",
+     location=location.abovebar, color=color.new(color.red,0),
+     style=shape.labeldown, size=size.tiny)
+
+// === Medias ===
+plot(ema200, title="EMA200", color=color.blue, linewidth=2)
+plot(wma9,   title="WMA9",   color=color.orange, linewidth=2)
+plot(vwap,   title="VWAP",   color=color.new(color.purple, 0), linewidth=2)
+
+// ======================================================
+//            TABLA (3 columnas x 7 filas)
+// ======================================================
+var table confirm_table = table.new(position.top_right, 3, 7)
+
+// ---------- BANNER ----------
+table.merge_cells(confirm_table, 0, 0, 2, 0)
+table.cell(
+    confirm_table, 0, 0,
+    "⚔️  MI TRABAJO ES EJECUTAR — GANAR O PERDER ES ESTADÍSTICA  📊",
+    bgcolor=color.new(color.rgb(30, 40, 75), 0),
+    text_color=color.white,
+    text_size=size.large,
+    text_halign=text.align_center,
+    text_valign=text.align_center
+)
+
+// ---------- SOMBRA ----------
+table.merge_cells(confirm_table, 0, 1, 2, 1)
+table.cell(confirm_table, 0, 1, "", bgcolor=color.new(color.black, 80))
+
+// ---------- HEADERS ----------
+table.cell(confirm_table, 0, 2, "CONFIRMACIÓN EN M15",
+    text_color=color.white,
+    bgcolor=color.new(color.rgb(60, 90, 150), 5),
+    text_halign=text.align_center)
+
+table.cell(confirm_table, 1, 2, "Estado",
+    text_color=color.white,
+    bgcolor=color.new(color.rgb(60, 90, 150), 5),
+    text_halign=text.align_center)
+
+table.cell(confirm_table, 2, 2, "Precios",
+    text_color=color.white,
+    bgcolor=color.new(color.rgb(60, 90, 150), 5),
+    text_halign=text.align_center)
+
+// ---------- EMA200 ----------
+ema_status = close > ema200_tf ? "🟢 BUY ⬆️" : "🔴 SELL ⬇️"
+ema_bg     = close > ema200_tf ? color.new(color.rgb(120, 240, 150), 5)
+                               : color.new(color.rgb(255, 120, 120), 5)
+
+table.cell(confirm_table, 0, 3, "EMA200 (M15)")
+table.cell(confirm_table, 1, 3, ema_status,
+    bgcolor=ema_bg,
+    text_color=color.black,
+    text_halign=text.align_center)
+
+table.cell(confirm_table, 2, 3,
+    str.tostring(ema200_tf, format.mintick),
+    text_color=color.black,
+    bgcolor=color.new(color.blue, 65),
+    text_halign=text.align_center)
+
+// ---------- VWAP ----------
+vwap_status = close > vwap_tf ? "🟢 BUY ⬆️" : "🔴 SELL ⬇️"
+vwap_bg     = close > vwap_tf ? color.new(color.rgb(120, 240, 150), 5)
+                              : color.new(color.rgb(255, 120, 120), 5)
+
+table.cell(confirm_table, 0, 4, "VWAP (M15)")
+table.cell(confirm_table, 1, 4, vwap_status,
+    bgcolor=vwap_bg,
+    text_color=color.black,
+    text_halign=text.align_center)
+
+table.cell(confirm_table, 2, 4,
+    str.tostring(vwap_tf, format.mintick),
+    text_color=color.black,
+    bgcolor=color.new(color.purple, 60),
+    text_halign=text.align_center)
+
+// ======================================================
+//    🔥 ÚLTIMO CRUCE (M1) — SOLO SESIÓN NY
+// ======================================================
+var string last_cross = "Sin cruces dentro de la sesión"
+var float last_cross_price = na
+
+if in_session and cross_up
+    last_cross := "🟢 Último cruce (M1): BUY ⬆️"
+    last_cross_price := close
+
+if in_session and cross_down
+    last_cross := "🔴 Último cruce (M1): SELL ⬇️"
+    last_cross_price := close
+
+table.cell(confirm_table, 0, 5, "Último cruce (NY)")
+table.cell(confirm_table, 1, 5, last_cross,
+    bgcolor=color.new(color.rgb(70, 90, 130), 5),
+    text_color=color.white,
+    text_halign=text.align_center)
+
+table.cell(confirm_table, 2, 5,
+    na(last_cross_price) ? "—" : str.tostring(last_cross_price, format.mintick),
+    text_color=color.white,
+    bgcolor=color.new(color.rgb(90, 110, 150), 10),
+    text_halign=text.align_center)
+
+// ---------- PIE DE NOTA ----------
+table.merge_cells(confirm_table, 0, 6, 2, 6)
+table.cell(
+    confirm_table, 0, 6,
+    "ANDERSSON SUAREZ/ CODIGO FANTASMA ",
+    text_color=color.new(#000000, 0),
+    bgcolor=color.new(#0543ee, 85),
+    text_size=size.small,
+    text_halign=text.align_center,
+    text_valign=text.align_center
+)
+
+// === Alertas — SIN CAMBIOS ===
+alertcondition(buy_signal,  title="Buy Signal",
+     message="BUY: Cruce WMA9>EMA200 + por encima del VWAP (Sesión NY)")
+
+alertcondition(sell_signal, title="Sell Signal",
+     message="SELL: Cruce WMA9<EMA200 + por debajo del VWAP (Sesión NY)")

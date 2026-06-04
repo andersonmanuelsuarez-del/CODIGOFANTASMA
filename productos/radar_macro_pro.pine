@@ -1,0 +1,26 @@
+//@version=6
+indicator("CODIGO FANTASMA v3 — Radar Macro Pro", overlay = true, max_bars_back = 500)
+
+// ═══════════════════════════════════════════════════════════════
+//  PARÁMETROS
+// ═══════════════════════════════════════════════════════════════
+
+// Volatilidad
+vxnCalma   = input.float(18.0, "VXN Nivel calma",          group = "1 - Volatilidad", minval = 5,    maxval = 40)
+vxnElevado = input.float(22.0, "VXN Nivel elevado",        group = "1 - Volatilidad", minval = 10,   maxval = 50)
+vixElevado = input.float(20.0, "VIX Nivel elevado",        group = "1 - Volatilidad", minval = 10,   maxval = 50)
+
+// Divergencia
+dxyThresh  = input.float(0.05, "DXY Umbral movimiento %",  group = "2 - Divergencia", minval = 0.01, maxval = 1.0)
+divThresh  = input.float(0.05, "DIV Umbral SPY/NQ %",      group = "2 - Divergencia", minval = 0.01, maxval = 1.0)
+
+// Momentum NQ (Módulo V1 — nuevo)
+emaFast    = input.int(9,  "EMA Rápida NQ",                group = "3 - Momentum NQ", minval = 2,    maxval = 50)
+emaSlow    = input.int(21, "EMA Lenta NQ",                 group = "3 - Momentum NQ", minval = 5,    maxval = 100)
+rsiLen     = input.int(14, "RSI NQ",                       group = "3 - Momentum NQ", minval = 2,    maxval = 30)
+momLen     = input.int(10, "Período Momentum",             group = "3 - Momentum NQ", minval = 2,    maxval = 30)
+
+// Tendencia de volatilidad (Módulo V1 — nuevo)
+emaVolLen  = input.int(9,  "EMA Tendencia VXN/VIX",        group = "4 - Tendencia Vol.", minval = 2, maxval = 30)
+
+// ... [full code preserved]
