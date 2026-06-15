@@ -50,6 +50,8 @@ namespace NinjaTrader.NinjaScript.Strategies
         private int  endSec;
         private int  tradesToday;
         private int  sessionFirstBar;
+        private double cumProfitStartOfSession;
+        private bool metaAlcanzadaHoy;
         // ── Estructura: último swing bajo ─────────────────────
         private int    lastSwingLowBarAbs    = -1;
         private double lastSwingLowPrice     = double.NaN;
@@ -103,6 +105,11 @@ namespace NinjaTrader.NinjaScript.Strategies
         [Range(1, 100)]
         [Display(Name = "Máx trades por día", GroupName = "1) Riesgo", Order = 3)]
         public int MaxTradesDia { get; set; }
+
+        [NinjaScriptProperty]
+        [Range(0, 100000)]
+        [Display(Name = "Meta de ganancia diaria (0=Desactivado)", GroupName = "1) Riesgo", Order = 4)]
+        public double MetaGananciaDiaria { get; set; }
 
         // ─── 3) Señal ───
         [NinjaScriptProperty]
@@ -207,6 +214,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 RiesgoPorTrade           = 600;
                 MaxContratos             = 5;
                 MaxTradesDia             = 1;
+                MetaGananciaDiaria       = 550;
 
                 // Señal
                 EmaPeriodo               = 18;
@@ -257,6 +265,8 @@ namespace NinjaTrader.NinjaScript.Strategies
                 vwapStdDev = 0;
                 tradesToday     = 0;
                 sessionFirstBar = CurrentBar;
+                cumProfitStartOfSession = SystemPerformance.AllTrades.TradesPerformance.Currency.CumProfit;
+                metaAlcanzadaHoy = false;
 
                 lastSwingLowBarAbs     = -1;
                 lastSwingLowPrice      = double.NaN;
@@ -301,6 +311,27 @@ namespace NinjaTrader.NinjaScript.Strategies
             {
                 peorPrecioTrade = Math.Max(peorPrecioTrade, High[0]);
             }
+
+            // Control de Meta de Ganancia Diaria
+            if (Position.MarketPosition != MarketPosition.Flat && MetaGananciaDiaria > 0)
+            {
+                double pnlRealizadoHoy = SystemPerformance.AllTrades.TradesPerformance.Currency.CumProfit - cumProfitStartOfSession;
+                double pnlNoRealizado = Position.GetUnrealizedProfitLoss(PerformanceUnit.Currency, Close[0]);
+
+                if ((pnlRealizadoHoy + pnlNoRealizado) >= MetaGananciaDiaria)
+                {
+                    if (Position.MarketPosition == MarketPosition.Long)
+                        ExitLong("Meta Diaria Anza", "ANZA_Long");
+                    else
+                        ExitShort("Meta Diaria Anza", "ANZA_Short");
+
+                    metaAlcanzadaHoy = true;
+                    Print($"[Anza] {Time[0]} META DIARIA ALCANZADA: Realizado={pnlRealizadoHoy:F2} + NoRealizado={pnlNoRealizado:F2} >= {MetaGananciaDiaria}. Cerrando posiciones.");
+                    return;
+                }
+            }
+
+            if (metaAlcanzadaHoy) return;
 
             if (Position.MarketPosition == MarketPosition.Short)
             {

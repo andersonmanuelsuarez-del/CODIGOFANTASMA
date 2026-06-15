@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión Lote 1 - Código Fantasma</title>
+  <meta name="description" content="Dashboard en tiempo real de la gestión del Lote 1 de cuentas de fondeo con el sistema Anza.">
+  <link rel="stylesheet" href="index.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <img src="assets/cf_logo.png" alt="Código Fantasma Logo">
+        <span>CÓDIGO FANTASMA</span>
+      </a>
+      <div class="nav-links" id="navLinks">
+        <a href="index.html#features">Ventajas</a>
+        <a href="index.html#systems">Sistemas</a>
+        <a href="gestion-lote1.html" class="active">Gestión Lote 1</a>
+        <a href="index.html#how-it-works">Cómo Funciona</a>
+        <a href="index.html#pricing">Precios</a>
+        <a href="index.html#cta" class="btn btn-primary nav-cta">Empezar Ahora</a>
+      </div>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Abrir menú">☰</button>
+    </div>
+  </nav>
+
+  <!-- ========== HERO DASHBOARD ========== -->
+  <section class="hero section" id="hero-dashboard" style="padding-top: 160px; padding-bottom: 60px;">
+    <div class="hero-glow hero-glow--blue"></div>
+    <div class="hero-glow hero-glow--cyan"></div>
+    <div class="container" style="display: grid; grid-template-columns: 0.7fr 1.3fr; gap: 3rem; align-items: center;">
+      <div class="hero-content">
+        <div class="badge">Auditoría en Tiempo Real</div>
+        <h1 class="hero-title" style="font-size: 3rem;">
+          Gestión de Fondeo:<br>
+          <span class="gradient-text">Lote 1 (TPT)</span>
+        </h1>
+        <p class="hero-subtitle">
+          Presentamos la trazabilidad transparente de nuestras 6 cuentas en fondeo. Haz clic en cada cuenta para ver los balances diarios de NinjaTrader.
+        </p>
+        <div class="hero-actions" style="justify-content: flex-start; margin-top: 2rem;">
+          <a href="assets/evidencias/pagos_tpt.jpg" target="_blank" class="btn btn-outline">Ver Recibos de Pago</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <a href="assets/evidencias/dashboartpt.jpg" target="_blank">
+          <img src="assets/evidencias/dashboartpt.jpg" alt="Dashboard Global TPT" style="width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-glow); border: 1px solid var(--border-subtle); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DASHBOARD GRID ========== -->
+  <section class="section" id="dashboard" style="padding-top: 0;">
+    <div class="container">
+      <div class="dashboard-grid">
+        <!-- Generaremos 6 tarjetas para las cuentas -->
+        <div class="account-card" onclick="openModal('L171')">
+          <div class="account-header">
+            <h3>Cuenta L171</h3>
+            <span class="status active">🟢 Activa</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat"><span class="label">Meta</span><span class="value">$3,000</span></div>
+            <div class="stat"><span class="label">Balance</span><span class="value">$49,997.50</span></div>
+            <div class="stat"><span class="label">Días</span><span class="value">1 / 5</span></div>
+          </div>
+          <button class="btn btn-outline" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Ver Evidencias</button>
+        </div>
+
+        <div class="account-card" onclick="openModal('L958')">
+          <div class="account-header">
+            <h3>Cuenta L958</h3>
+            <span class="status active">🟢 Activa</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat"><span class="label">Meta</span><span class="value">$3,000</span></div>
+            <div class="stat"><span class="label">Balance</span><span class="value">$49,999.50</span></div>
+            <div class="stat"><span class="label">Días</span><span class="value">1 / 5</span></div>
+          </div>
+          <button class="btn btn-outline" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Ver Evidencias</button>
+        </div>
+
+        <div class="account-card" onclick="openModal('T708')">
+          <div class="account-header">
+            <h3>Cuenta T708</h3>
+            <span class="status active">🟢 Activa</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat"><span class="label">Meta</span><span class="value">$3,000</span></div>
+            <div class="stat"><span class="label">Balance</span><span class="value">$50,003.00</span></div>
+            <div class="stat"><span class="label">Días</span><span class="value">1 / 5</span></div>
+          </div>
+          <button class="btn btn-outline" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Ver Evidencias</button>
+        </div>
+
+        <div class="account-card" onclick="openModal('T110')">
+          <div class="account-header">
+            <h3>Cuenta T110</h3>
+            <span class="status active">🟢 Activa</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat"><span class="label">Meta</span><span class="value">$3,000</span></div>
+            <div class="stat"><span class="label">Balance</span><span class="value">$49,996.00</span></div>
+            <div class="stat"><span class="label">Días</span><span class="value">1 / 5</span></div>
+          </div>
+          <button class="btn btn-outline" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Ver Evidencias</button>
+        </div>
+
+        <div class="account-card" onclick="openModal('T113')">
+          <div class="account-header">
+            <h3>Cuenta T113</h3>
+            <span class="status active">🟢 Activa</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat"><span class="label">Meta</span><span class="value">$3,000</span></div>
+            <div class="stat"><span class="label">Balance</span><span class="value">$49,996.50</span></div>
+            <div class="stat"><span class="label">Días</span><span class="value">1 / 5</span></div>
+          </div>
+          <button class="btn btn-outline" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Ver Evidencias</button>
+        </div>
+
+        <div class="account-card" onclick="openModal('T381')">
+          <div class="account-header">
+            <h3>Cuenta T381</h3>
+            <span class="status active">🟢 Activa</span>
+          </div>
+          <div class="account-stats">
+            <div class="stat"><span class="label">Meta</span><span class="value">$3,000</span></div>
+            <div class="stat"><span class="label">Balance</span><span class="value">$50,001.00</span></div>
+            <div class="stat"><span class="label">Días</span><span class="value">1 / 5</span></div>
+          </div>
+          <button class="btn btn-outline" style="width: 100%; margin-top: 1rem; padding: 0.5rem;">Ver Evidencias</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== MODAL DE EVIDENCIAS (CALENDARIO TIPO NINJA) ========== -->
+  <div id="evidenceModal" class="modal">
+    <div class="modal-content" style="max-width: 900px; padding: 0;">
+      <div style="padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); background: var(--bg-secondary); border-top-left-radius: var(--radius-xl); border-top-right-radius: var(--radius-xl);">
+        <h2 id="modalTitle" style="margin: 0; font-size: 1.5rem;">Evidencias - Cuenta</h2>
+        <span class="close-modal" onclick="closeModal()" style="font-size: 1.5rem; padding: 0.5rem; cursor: pointer;">&times;</span>
+      </div>
+      
+      <div style="padding: 1.5rem; background: #0f0f13;">
+        <div style="text-align: center; margin-bottom: 1.5rem;">
+          <h3 style="margin: 0; font-size: 1.2rem; color: var(--text-primary);">Monthly P/L: <span id="monthly-pl" style="color: var(--text-primary);">$0.00</span></h3>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; color: var(--text-muted);">
+          <span style="font-size: 0.9rem;">&lt; &nbsp; Jun 2026 &nbsp; &gt;</span>
+          <button style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 5px 15px; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Today</button>
+        </div>
+
+        <!-- NinjaTrader Style Calendar Grid -->
+        <div class="ninja-calendar">
+          <div class="cal-header">Mo</div>
+          <div class="cal-header">Tu</div>
+          <div class="cal-header">We</div>
+          <div class="cal-header">Th</div>
+          <div class="cal-header">Fr</div>
+          <div class="cal-header">Sa</div>
+          <div class="cal-header">Su</div>
+
+          <!-- Week 1: 1 to 7 -->
+          <div class="cal-cell empty"><span class="date">1</span></div>
+          <div class="cal-cell empty"><span class="date">2</span></div>
+          <div class="cal-cell empty"><span class="date">3</span></div>
+          <div class="cal-cell empty"><span class="date">4</span></div>
+          <div class="cal-cell empty"><span class="date">5</span></div>
+          <div class="cal-cell empty"><span class="date">6</span></div>
+          <div class="cal-cell empty"><span class="date">7</span></div>
+
+          <!-- Week 2: 8 to 14 -->
+          <div class="cal-cell empty"><span class="date">8</span></div>
+          <div class="cal-cell empty"><span class="date">9</span></div>
+          <div class="cal-cell empty"><span class="date">10</span></div>
+          <div class="cal-cell empty"><span class="date">11</span></div>
+          <div class="cal-cell empty"><span class="date">12</span></div>
+          <div class="cal-cell empty"><span class="date">13</span></div>
+          <div class="cal-cell empty"><span class="date">14</span></div>
+
+          <!-- Week 3: 15 to 21 -->
+          <div class="cal-cell today" id="cell-15">
+            <span class="date">15</span>
+            <div class="pl-val neutral" id="pl-15">$0.00</div>
+            <div class="trades" id="sys-15">Sistema B</div>
+          </div>
+          <div class="cal-cell empty"><span class="date">16</span></div>
+          <div class="cal-cell empty"><span class="date">17</span></div>
+          <div class="cal-cell empty"><span class="date">18</span></div>
+          <div class="cal-cell empty"><span class="date">19</span></div>
+          <div class="cal-cell empty"><span class="date">20</span></div>
+          <div class="cal-cell empty"><span class="date">21</span></div>
+
+          <!-- Week 4: 22 to 28 -->
+          <div class="cal-cell empty"><span class="date">22</span></div>
+          <div class="cal-cell empty"><span class="date">23</span></div>
+          <div class="cal-cell empty"><span class="date">24</span></div>
+          <div class="cal-cell empty"><span class="date">25</span></div>
+          <div class="cal-cell empty"><span class="date">26</span></div>
+          <div class="cal-cell empty"><span class="date">27</span></div>
+          <div class="cal-cell empty"><span class="date">28</span></div>
+
+          <!-- Week 5: 29, 30 -->
+          <div class="cal-cell empty"><span class="date">29</span></div>
+          <div class="cal-cell empty"><span class="date">30</span></div>
+          <div class="cal-cell disabled"><span class="date">1</span></div>
+          <div class="cal-cell disabled"><span class="date">2</span></div>
+          <div class="cal-cell disabled"><span class="date">3</span></div>
+          <div class="cal-cell disabled"><span class="date">4</span></div>
+          <div class="cal-cell disabled"><span class="date">5</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Configuración de datos del calendario (puedes editar estos valores día tras día)
+    // Para cada cuenta, especifica el P/L del día 15, el sistema usado y la ruta de la imagen.
+    const accountData = {
+      'L171': { '15': { pl: -2.50, sys: 'Sistema B', img: 'assets/evidencias/diasminimos1.jpg' } },
+      'L958': { '15': { pl: -0.50, sys: 'Sistema B', img: 'assets/evidencias/diasminimos1.jpg' } },
+      'T708': { '15': { pl: 3.00, sys: 'Sistema B', img: 'assets/evidencias/diasminimos1.jpg' } },
+      'T110': { '15': { pl: -4.00, sys: 'Sistema B', img: 'assets/evidencias/diasminimos1.jpg' } },
+      'T113': { '15': { pl: -3.50, sys: 'Sistema B', img: 'assets/evidencias/diasminimos1.jpg' } },
+      'T381': { '15': { pl: 1.00, sys: 'Sistema B', img: 'assets/evidencias/diasminimos1.jpg' } }
+    };
+
+    function openModal(accountId) {
+      document.getElementById('modalTitle').innerText = 'Evidencias - Cuenta ' + accountId;
+      document.getElementById('evidenceModal').style.display = 'flex';
+      
+      // Obtener datos de la cuenta para el día 15
+      const data = accountData[accountId] ? accountData[accountId]['15'] : null;
+      
+      const plEl = document.getElementById('pl-15');
+      const sysEl = document.getElementById('sys-15');
+      const cellEl = document.getElementById('cell-15');
+      const monthlyPlEl = document.getElementById('monthly-pl');
+      
+      if(data) {
+        // Formatear valor
+        let formattedPl = data.pl === 0 ? '$0.00' : (data.pl > 0 ? '+$' + data.pl.toFixed(2) : '-$' + Math.abs(data.pl).toFixed(2));
+        
+        // Convertir el P/L en un enlace hacia la imagen
+        plEl.innerHTML = `<a href="${data.img}" target="_blank" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;" title="Clic para ver evidencia">${formattedPl}</a>`;
+        
+        monthlyPlEl.innerText = formattedPl;
+        sysEl.innerText = data.sys;
+        
+        // Colores según P/L
+        cellEl.className = 'cal-cell today'; // reset
+        if(data.pl > 0) {
+          cellEl.classList.add('profit');
+          monthlyPlEl.style.color = '#10B981';
+        }
+        else if(data.pl < 0) {
+          cellEl.classList.add('loss');
+          monthlyPlEl.style.color = '#EF4444';
+        }
+        else {
+          monthlyPlEl.style.color = 'var(--text-primary)';
+        }
+      }
+    }
+
+    function closeModal() {
+      document.getElementById('evidenceModal').style.display = 'none';
+    }
+
+    // Cerrar modal al hacer click fuera de él
+    window.onclick = function(event) {
+      var modal = document.getElementById('evidenceModal');
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    // Toggle menu móvil
+    document.getElementById('mobileToggle').addEventListener('click', function() {
+      document.getElementById('navLinks').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
