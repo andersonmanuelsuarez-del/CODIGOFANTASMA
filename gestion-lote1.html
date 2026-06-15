@@ -44,11 +44,11 @@
           Presentamos la trazabilidad transparente de nuestras 6 cuentas en fondeo. Haz clic en cada cuenta para ver los balances diarios de NinjaTrader.
         </p>
         <div class="hero-actions" style="justify-content: flex-start; margin-top: 2rem;">
-          <a href="assets/evidencias/pagos_tpt.jpg" target="_blank" class="btn btn-outline">Ver Recibos de Pago</a>
+          <a href="javascript:void(0)" onclick="openLightbox('assets/evidencias/pagos_tpt.jpg')" class="btn btn-outline">Ver Recibos de Pago</a>
         </div>
       </div>
       <div class="hero-visual">
-        <a href="assets/evidencias/dashboartpt.jpg" target="_blank">
+        <a href="javascript:void(0)" onclick="openLightbox('assets/evidencias/dashboartpt.jpg')">
           <img src="assets/evidencias/dashboartpt.jpg" alt="Dashboard Global TPT" style="width: 100%; border-radius: var(--radius-lg); box-shadow: var(--shadow-glow); border: 1px solid var(--border-subtle); transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
         </a>
       </div>
@@ -250,8 +250,8 @@
         // Formatear valor
         let formattedPl = data.pl === 0 ? '$0.00' : (data.pl > 0 ? '+$' + data.pl.toFixed(2) : '-$' + Math.abs(data.pl).toFixed(2));
         
-        // Convertir el P/L en un enlace hacia la imagen
-        plEl.innerHTML = `<a href="${data.img}" target="_blank" style="color: inherit; text-decoration: underline; text-underline-offset: 3px;" title="Clic para ver evidencia">${formattedPl}</a>`;
+        // Convertir el P/L en un enlace que abre la evidencia en el Lightbox de la página
+        plEl.innerHTML = `<span style="color: inherit; text-decoration: underline; text-underline-offset: 3px; cursor: pointer;" title="Clic para ver evidencia" onclick="openLightbox('${data.img}')">${formattedPl}</span>`;
         
         monthlyPlEl.innerText = formattedPl;
         sysEl.innerText = data.sys;
@@ -284,10 +284,26 @@
       }
     }
 
+    // ========== LOGICA DEL LIGHTBOX ==========
+    function openLightbox(imgSrc) {
+      document.getElementById('lightboxImg').src = imgSrc;
+      document.getElementById('lightboxOverlay').classList.add('active');
+    }
+    
+    function closeLightbox() {
+      document.getElementById('lightboxOverlay').classList.remove('active');
+    }
+
     // Toggle menu móvil
     document.getElementById('mobileToggle').addEventListener('click', function() {
       document.getElementById('navLinks').classList.toggle('active');
     });
   </script>
+
+  <!-- ========== LIGHTBOX ========== -->
+  <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img class="lightbox-img" id="lightboxImg" src="" alt="Evidencia">
+  </div>
 </body>
 </html>
