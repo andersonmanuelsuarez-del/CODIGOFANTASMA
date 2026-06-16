@@ -446,7 +446,7 @@
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           // Close mobile menu if open
-          if (window.innerWidth <= 768) {
+          if (window.innerWidth <= 1024) {
             navLinks.style.display = 'none';
             mobileToggle.textContent = '☰';
           }
