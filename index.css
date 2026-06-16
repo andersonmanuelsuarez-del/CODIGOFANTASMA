@@ -1146,9 +1146,12 @@ ul { list-style: none; }
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .nav-links { display: none; }
   .mobile-toggle { display: block; }
+}
+
+@media (max-width: 768px) {
 
   .features-grid,
   .systems-grid,
