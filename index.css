@@ -1526,6 +1526,15 @@ ul { list-style: none; }
   font-weight: 600;
 }
 
+.status.disabled {
+  background: rgba(239, 68, 68, 0.15);
+  color: #EF4444;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .account-stats {
   display: flex;
   flex-direction: column;
