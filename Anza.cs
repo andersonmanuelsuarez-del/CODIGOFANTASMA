@@ -73,6 +73,9 @@ namespace NinjaTrader.NinjaScript.Strategies
         private int currentPositionQty = 0;
         private double sumaRetrocesosTP = 0;
         private int conteoTradesTP = 0;
+        
+        // ── Variables Break Even ──────────────────────────────
+        private bool beActivado = false;
         // ════════════════════════════════════════════════════
         //  PARÁMETROS
         // ════════════════════════════════════════════════════
@@ -163,7 +166,19 @@ namespace NinjaTrader.NinjaScript.Strategies
         [Display(Name = "Balance objetivo (USD)", GroupName = "4) Control de Balance (Fondeo)", Order = 2,
             Description = "Balance total de la cuenta al que se desea llegar. Ejemplo: 53000. Al alcanzarlo se cierra todo y no se abren más trades.")]
         public double BalanceObjetivo { get; set; }
-        // ─── 6) Piramidación (DESACTIVADA — oculta al usuario) ───
+
+        // ─── 6) Break Even ───
+        [NinjaScriptProperty]
+        [Display(Name = "Activar Break Even", GroupName = "5) Break Even", Order = 1)]
+        public bool UsarBreakEven { get; set; }
+
+        [NinjaScriptProperty]
+        [Range(0.1, 10.0)]
+        [Display(Name = "Gatillo Break Even (en R)", GroupName = "5) Break Even", Order = 2,
+            Description = "Distancia en múltiplo de Riesgo (R) para activar el BE. Ej: 0.7 = 70% del recorrido del Stop Loss.")]
+        public double BreakEvenTriggerRR { get; set; }
+
+        // ─── 7) Piramidación (DESACTIVADA — oculta al usuario) ───
         [Browsable(false)]
         public bool UsarPiramidacion { get; set; }
         [Browsable(false)]
@@ -211,6 +226,9 @@ namespace NinjaTrader.NinjaScript.Strategies
                 // Control de Balance para Fondeo
                 UsarControlBalance       = false;
                 BalanceObjetivo          = 53000;
+                // Break Even
+                UsarBreakEven            = false;
+                BreakEvenTriggerRR       = 0.7;
                 // Piramidación DESACTIVADA por defecto
                 UsarPiramidacion         = false;
                 MaxPiramides             = 0;
@@ -254,6 +272,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                 stopLossInicialRef = double.NaN;
                 peorPrecioTrade = double.NaN;
                 tradeActivo = false;
+                beActivado = false;
                 currentPositionQty = 0;
             }
             double precioTipico = (High[0] + Low[0] + Close[0]) / 3.0;
@@ -309,10 +328,12 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (Position.MarketPosition == MarketPosition.Long && tradeActivo)
             {
                 peorPrecioTrade = Math.Min(peorPrecioTrade, Low[0]);
+                CheckBreakEven(High[0]);
             }
             else if (Position.MarketPosition == MarketPosition.Short && tradeActivo)
             {
                 peorPrecioTrade = Math.Max(peorPrecioTrade, High[0]);
+                CheckBreakEven(Low[0]);
             }
             if (Position.MarketPosition == MarketPosition.Short)
             {
@@ -393,6 +414,9 @@ namespace NinjaTrader.NinjaScript.Strategies
             // Solo procesar actualizaciones de Last price (ejecuciones reales)
             if (marketDataUpdate.MarketDataType != MarketDataType.Last)
                 return;
+                
+            CheckBreakEven(marketDataUpdate.Price);
+
             double equityActual = ObtenerEquityTotal(marketDataUpdate.Price);
             if (equityActual >= BalanceObjetivo)
             {
@@ -488,13 +512,14 @@ namespace NinjaTrader.NinjaScript.Strategies
                 maxDistAllowed = Math.Min(catDist, corteDist);
             }
             double finalSLLevel = Close[0] + maxDistAllowed;
-            int stopTicks   = Math.Max(1, (int)Math.Round(stopDist / TickSize));
-            int finalSLTicks = Math.Max(1, (int)Math.Round(maxDistAllowed / TickSize));
+
             structureStop      = stopLevel;
             targetRef          = Close[0] - stopDist * RR;
-            SetStopLoss("ANZA_Short", CalculationMode.Ticks,
-                ModoSalida == AnzaExitMode.StopFijoClasico ? stopTicks : finalSLTicks, false);
+            
+            double initialSL = ModoSalida == AnzaExitMode.StopFijoClasico ? stopLevel : finalSLLevel;
+            SetStopLoss("ANZA_Short", CalculationMode.Price, initialSL, false);
             SetProfitTarget("ANZA_Short", CalculationMode.Price, targetRef);
+            
             EnterShort(qty, "ANZA_Short");
             tradesToday++;
             lastSwingLowUsed = true;
@@ -533,13 +558,14 @@ namespace NinjaTrader.NinjaScript.Strategies
                 maxDistAllowed = Math.Min(catDist, corteDist);
             }
             double finalSLLevel = Close[0] - maxDistAllowed;
-            int stopTicks   = Math.Max(1, (int)Math.Round(stopDist / TickSize));
-            int finalSLTicks = Math.Max(1, (int)Math.Round(maxDistAllowed / TickSize));
+
             structureStop      = stopLevel;
             targetRef          = Close[0] + stopDist * RR;
-            SetStopLoss("ANZA_Long", CalculationMode.Ticks,
-                ModoSalida == AnzaExitMode.StopFijoClasico ? stopTicks : finalSLTicks, false);
+            
+            double initialSL = ModoSalida == AnzaExitMode.StopFijoClasico ? stopLevel : finalSLLevel;
+            SetStopLoss("ANZA_Long", CalculationMode.Price, initialSL, false);
             SetProfitTarget("ANZA_Long", CalculationMode.Price, targetRef);
+            
             EnterLong(qty, "ANZA_Long");
             tradesToday++;
             lastSwingHighUsed = true;
@@ -686,6 +712,32 @@ namespace NinjaTrader.NinjaScript.Strategies
                 return fallback;
             }
         }
+        
+        // ════════════════════════════════════════════════════
+        //  FUNCIÓN BREAK EVEN
+        // ════════════════════════════════════════════════════
+        private void CheckBreakEven(double currentPrice)
+        {
+            if (!UsarBreakEven || !tradeActivo || beActivado || double.IsNaN(precioEntradaRef) || double.IsNaN(stopLossInicialRef))
+                return;
+                
+            double stopDist = Math.Abs(precioEntradaRef - stopLossInicialRef);
+            double triggerDist = stopDist * BreakEvenTriggerRR;
+            
+            if (Position.MarketPosition == MarketPosition.Long && currentPrice >= precioEntradaRef + triggerDist)
+            {
+                beActivado = true;
+                SetStopLoss("ANZA_Long", CalculationMode.Price, precioEntradaRef, false);
+                Print($"[Anza-BE] BreakEven Activado en LONG. Precio {currentPrice:F2} >= gatillo ({precioEntradaRef + triggerDist:F2}). Stop movido a entrada: {precioEntradaRef:F2}.");
+            }
+            else if (Position.MarketPosition == MarketPosition.Short && currentPrice <= precioEntradaRef - triggerDist)
+            {
+                beActivado = true;
+                SetStopLoss("ANZA_Short", CalculationMode.Price, precioEntradaRef, false);
+                Print($"[Anza-BE] BreakEven Activado en SHORT. Precio {currentPrice:F2} <= gatillo ({precioEntradaRef - triggerDist:F2}). Stop movido a entrada: {precioEntradaRef:F2}.");
+            }
+        }
+        
         // ════════════════════════════════════════════════════
         protected override void OnExecutionUpdate(Execution execution, string executionId,
             double price, int quantity, MarketPosition marketPosition,
@@ -746,6 +798,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                         precioEntradaRef = double.NaN;
                         stopLossInicialRef = double.NaN;
                         peorPrecioTrade = double.NaN;
+                        beActivado = false;
                     }
                 }
             }
