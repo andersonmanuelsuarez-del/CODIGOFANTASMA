@@ -214,7 +214,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                         string url = "https://raw.githubusercontent.com/andersonmanuelsuarez-del/CODIGOFANTASMA/main/licencias.txt";
                         string validLicenses = client.DownloadString(url);
                         
-                        string myMachineId = NinjaTrader.Core.Globals.MachineId;
+                        string myMachineId = NinjaTrader.Cbi.License.MachineId;
                         bool isValid = false;
                         
                         foreach (string line in validLicenses.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
