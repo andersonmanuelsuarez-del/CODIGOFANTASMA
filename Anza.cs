@@ -76,6 +76,9 @@ namespace NinjaTrader.NinjaScript.Strategies
         
         // ── Variables Break Even ──────────────────────────────
         private bool beActivado = false;
+        
+        // ── Licencia ──────────────────────────────────────────
+        private bool isLicensed = false;
         // ════════════════════════════════════════════════════
         //  PARÁMETROS
         // ════════════════════════════════════════════════════
@@ -238,6 +241,41 @@ namespace NinjaTrader.NinjaScript.Strategies
             {
                 startSec = ParseHHmmss(HoraInicio, 83000);
                 endSec   = ParseHHmmss(HoraFin,   103000);
+                
+                // ── Verificación de Licencia en la nube ──
+                try 
+                {
+                    using (System.Net.WebClient client = new System.Net.WebClient())
+                    {
+                        client.Headers.Add("Cache-Control", "no-cache");
+                        // URL directa (raw) al archivo licencias.txt en GitHub
+                        string url = "https://raw.githubusercontent.com/andersonmanuelsuarez-del/CODIGOFANTASMA/main/licencias.txt";
+                        string validLicenses = client.DownloadString(url);
+                        
+                        string myMachineId = NinjaTrader.Core.Globals.MachineId;
+                        
+                        if (validLicenses.Contains(myMachineId))
+                        {
+                            isLicensed = true;
+                            Print($"[Anza] Licencia validada exitosamente para el Machine ID: {myMachineId}");
+                        }
+                        else 
+                        {
+                            isLicensed = false;
+                            Print("==================================================");
+                            Print(" ERROR DE LICENCIA - SISTEMA ANZA");
+                            Print(" Tu Machine ID no está autorizado para usar este sistema.");
+                            Print(" Tu Machine ID es: " + myMachineId);
+                            Print(" Por favor envía este ID al administrador en Discord para activarlo.");
+                            Print("==================================================");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    isLicensed = false;
+                    Print("[Anza] Error verificando la licencia: " + ex.Message);
+                }
             }
             else if (State == State.DataLoaded)
             {
@@ -249,6 +287,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         // ════════════════════════════════════════════════════
         protected override void OnBarUpdate()
         {
+            if (!isLicensed) return;
             if (CurrentBar < 1) return;
             if (Bars.IsFirstBarOfSession)
             {
@@ -405,6 +444,7 @@ namespace NinjaTrader.NinjaScript.Strategies
         // ════════════════════════════════════════════════════
         protected override void OnMarketData(MarketDataEventArgs marketDataUpdate)
         {
+            if (!isLicensed) return;
             // Solo monitorear si el control está activo y aún no se alcanzó
             if (!UsarControlBalance || balanceObjetivoAlcanzado)
                 return;
