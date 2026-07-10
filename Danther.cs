@@ -215,8 +215,22 @@ namespace NinjaTrader.NinjaScript.Strategies
                         string validLicenses = client.DownloadString(url);
                         
                         string myMachineId = NinjaTrader.Core.Globals.MachineId;
+                        bool isValid = false;
                         
-                        if (validLicenses.Contains("DANTHER-" + myMachineId))
+                        foreach (string line in validLicenses.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+                        {
+                            // Ignorar líneas comentadas
+                            if (line.Trim().StartsWith("//") || line.Trim().StartsWith("#")) continue;
+                            
+                            // Validar si la línea contiene la etiqueta del sistema y el Machine ID
+                            if (line.ToUpper().Contains("DANTHER") && line.Contains(myMachineId))
+                            {
+                                isValid = true;
+                                break;
+                            }
+                        }
+                        
+                        if (isValid)
                         {
                             isLicensed = true;
                             Print($"[Danther] Licencia validada exitosamente para el Machine ID: {myMachineId}");
