@@ -216,7 +216,7 @@ namespace NinjaTrader.NinjaScript.Strategies
                         
                         string myMachineId = NinjaTrader.Core.Globals.MachineId;
                         
-                        if (validLicenses.Contains(myMachineId))
+                        if (validLicenses.Contains("DANTHER-" + myMachineId))
                         {
                             isLicensed = true;
                             Print($"[Danther] Licencia validada exitosamente para el Machine ID: {myMachineId}");
