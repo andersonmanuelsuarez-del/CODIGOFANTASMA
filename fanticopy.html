@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fanticopy — Código Fantasma</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body style="padding-top: 80px;">
+  <nav class="navbar" id="navbar" style="background: rgba(10,14,26,0.95); backdrop-filter: blur(10px);">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <img src="assets/cf_logo.png" alt="Código Fantasma Logo">
+        <span>CÓDIGO FANTASMA</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html#systems">← Volver al Catálogo</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div style="max-width: 800px; margin: 0 auto;">
+        <div style="margin-bottom: 2rem;">
+            <span class="system-badge multi" style="background: rgba(124,58,237,0.15); color: #c084fc; margin-bottom: 1rem;">NinjaTrader 8</span>
+            <h1 class="section-title" style="margin-bottom: 1rem;">Fanticopy</h1>
+            <p class="section-subtitle" style="text-align: left; margin: 0;">Copiador de operaciones. Replica en tiempo real lo que hace tu cuenta maestra en todas tus cuentas, cada una con su propio tamaño y sus propios límites de riesgo.</p>
+        </div>
+
+        <div class="system-placeholder" style="height: 260px; border-radius: var(--radius-lg); border: 1px solid var(--border-subtle); margin-bottom: 2rem;">
+            <span class="ph-tag">Próximamente</span>
+            <span class="ph-title" style="font-size: 2rem;">Fanticopy</span>
+            <span class="ph-sub">Copiador multicuenta para NinjaTrader 8</span>
+        </div>
+
+        <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">El problema que resuelve</h3>
+            <p style="color: var(--text-secondary); margin: 0 0 1rem;">Copiar a mano no escala: se te pasa una entrada, te equivocas de tamaño o entras tarde y a otro precio. Y los copiadores genéricos replican órdenes una a una, así que cualquier fallo puntual deja las cuentas descuadradas y no se recuperan solas.</p>
+            <p style="color: var(--text-secondary); margin: 0;">Fanticopy no replica órdenes: <strong style="color: var(--text-primary);">replica la posición</strong>. En todo momento calcula cuántos contratos debería tener cada cuenta y corrige la diferencia. Si una orden se pierde, si NinjaTrader se reinicia o si una cuenta se desconecta un momento, al volver se recoloca sola.</p>
+        </div>
+
+        <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-primary);">Qué hace</h3>
+            <ul style="list-style: none; padding: 0; display: grid; gap: 1rem; color: var(--text-secondary);">
+                <li><span style="color: var(--accent-violet);">✓</span> Varios grupos independientes, cada uno con su maestra y sus seguidoras.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Tamaño por cuenta: mismo, proporcional o cantidad fija, con tope duro de contratos.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Pérdida máxima y meta del día por cuenta, editables en la pantalla principal.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Salida exacta: los límites se colocan como órdenes reales en el bróker, al precio donde la cuenta vale justo esa cifra y con la comisión ya descontada.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Cierre por horario, para no amanecer con una posición de la sesión anterior.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Diario automático en CSV con entrada, salida, comisiones y resultado neto.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Avisos por Telegram al móvil, incluidos los críticos.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Modo prueba: calcula y registra todo sin mandar una sola orden.</li>
+            </ul>
+        </div>
+
+        <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--text-primary);">Lo que lo diferencia</h3>
+            <ul style="list-style: none; padding: 0; display: grid; gap: 1rem; color: var(--text-secondary);">
+                <li><span style="color: var(--accent-violet);">✓</span> Sin servidor y sin terceros. Todo ocurre en tu ordenador y tus datos no salen de ahí.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Copia posiciones, no órdenes: se recupera solo de fallos, reinicios y desconexiones.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Los límites son órdenes reales, no un vigilante que reacciona tarde.</li>
+                <li><span style="color: var(--accent-violet);">✓</span> Un solo archivo. No instalas nada ni necesitas permisos de administrador.</li>
+            </ul>
+        </div>
+
+        <div style="background: var(--bg-secondary); padding: 2rem; border-radius: var(--radius-lg); margin-bottom: 2rem; border: 1px solid var(--border-subtle);">
+            <h3 style="font-size: 1.25rem; margin-bottom: 1rem; color: var(--text-primary);">Requisitos y límites</h3>
+            <ul style="list-style: none; padding: 0; display: grid; gap: 0.75rem; color: var(--text-muted); font-size: 0.9rem;">
+                <li>· NinjaTrader 8 (la versión gratuita sirve), Windows, un solo ordenador.</li>
+                <li>· Todas las cuentas conectadas en la misma instancia de NinjaTrader.</li>
+                <li>· Copia el mismo instrumento que opera la maestra: no traduce entre contrato grande y micro.</li>
+                <li>· Los contratos son enteros: con proporciones y tamaños pequeños, el redondeo desvía la fracción pedida.</li>
+                <li>· Ningún copiador evita el deslizamiento: la seguidora entra un instante después que la maestra.</li>
+            </ul>
+        </div>
+
+        <div style="background: linear-gradient(145deg, rgba(124,58,237,0.1), rgba(10,14,26,0)); padding: 2rem; border-radius: var(--radius-lg); text-align: center; border: 1px solid var(--accent-violet);">
+            <span class="ph-tag" style="display: inline-block; margin-bottom: 1rem;">Próximamente</span>
+            <h3 style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--text-primary);">$30 <span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">USD / mes</span></h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">En fase final de validación. Entra a la lista y te aviso el día que abra.</p>
+            <a href="https://wa.me/593989430768?text=Hola,%20quiero%20entrar%20a%20la%20lista%20de%20espera%20de%20Fanticopy" class="btn btn-primary" style="padding: 1rem 3rem; font-size: 1.1rem;" target="_blank">Entrar a la lista de espera</a>
+            <div style="margin-top: 1rem;"><a href="index.html#pricing" style="color: var(--text-accent); font-size: 0.9rem;">Ver todos los planes →</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="lightbox.js"></script>
+</body>
+</html>
