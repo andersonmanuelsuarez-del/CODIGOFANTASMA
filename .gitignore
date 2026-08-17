@@ -1,0 +1,16 @@
+# Este repositorio es PUBLICO y sirve la pagina web.
+# Nada de codigo fuente de producto ni documentos internos.
+
+# Codigo fuente de los sistemas
+*.cs
+*.pine
+productos/
+
+# Documentos internos
+plan_negocio_v2.html
+*_backup.txt
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store
